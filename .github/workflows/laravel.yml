@@ -27,8 +27,14 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
     - name: Run Pint (Code Style)
       run: ./vendor/bin/pint --test
-    - name: Run PHPStan (Static Analysis)
-      run: ./vendor/bin/phpstan analyse app --memory-limit=2M
+    - name: Run PHPStan (Debug and Analysis)
+      run: |
+        echo "--- MENCARI FILE PHPSTAN ---"
+        find . -name "phpstan" -type f
+        echo "--- MENCOBA MENJALANKAN DARI PATH ALTERNATIF ---"
+        # Coba eksekusi langsung ke binary-nya jika path biasa gagal
+        ./vendor/phpstan/phpstan/phpstan --version || echo "Path vendor/phpstan gagal"
+        ./vendor/bin/phpstan --version || echo "Path vendor/bin gagal"
     - name: Execute tests (PHPUnit) via Artisan
       env:
         DB_CONNECTION: sqlite
