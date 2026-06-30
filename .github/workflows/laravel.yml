@@ -27,8 +27,11 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
     - name: Run Pint (Code Style)
       run: ./vendor/bin/pint --test
-    - - - name: Run PHPStan (Static Analysis)
-      run: ./vendor/bin/phpstan analyse app --memory-limit=2M
+    - - name: Run PHPStan (Static Analysis)
+      run: |
+        composer global require phpstan/phpstan
+        export PATH="$PATH:$HOME/.composer/vendor/bin"
+        phpstan analyse app --memory-limit=2M
     - name: Execute tests (PHPUnit) via Artisan
       env:
         DB_CONNECTION: sqlite
